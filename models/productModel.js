@@ -1,5 +1,7 @@
 const connection = require('./connection');
 
+const error = 'Query inválida';
+
 const getAll = async () => {
   const query = 'SELECT * FROM StoreManager.products';
   const [products] = await connection.execute(query);
@@ -13,15 +15,20 @@ const getProductById = async (id) => {
 };
 
 const addProduct = async (name, quantity) => {
-  const [product] = await connection.execute(
-    'INSERT INTO StoreManager.products (name, quantity) VALUES (?, ?)',
-    [name, quantity],
-  );
-  return {
-    id: product.insertId, 
-    name, 
-    quantity,
-  };
+  try {
+    const [product] = await connection.execute(
+      'INSERT INTO StoreManager.products (`name`, quantity) VALUES (?, ?)',
+      [name, quantity],
+    );
+
+    return {
+      id: product.insertId, 
+      name, 
+      quantity,
+    };
+  } catch (err) {
+    return { error };
+  }
 };
 
 const updateProduct = async ({ id, name, quantity }) => {

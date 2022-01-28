@@ -5,7 +5,7 @@ const addProduct = async (req, res) => {
 
   const product = await productService.addProduct(name, quantity);
 
-  return res.status(200).send(product);
+  return res.status(201).send(product);
 };
 
 module.exports = {
