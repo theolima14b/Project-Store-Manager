@@ -3,13 +3,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const rescue = require('express-rescue');
 
-const productModel = require('./models/productModel');
+const productController = require('./controllers/productController');
 
 const app = express();
 
 app.use(bodyParser.json());
 
-app.post('/products', rescue(productModel.addProduct));
+app.post('/products', rescue(productController.addProduct));
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
