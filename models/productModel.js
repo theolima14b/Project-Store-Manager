@@ -17,7 +17,11 @@ const addProduct = async (name, quantity) => {
     'INSERT INTO StoreManager.products (name, quantity) VALUES (?, ?)',
     [name, quantity],
   );
-  return product;
+  return {
+    id: product.insertId, 
+    name, 
+    quantity,
+  };
 };
 
 const updateProduct = async ({ id, name, quantity }) => {

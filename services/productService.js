@@ -1,9 +1,9 @@
 const productModel = require('../models/productModel');
 
 const addProduct = async (name, quantity) => {
-  await productModel.addProduct(name, quantity);
+  const newProduct = await productModel.addProduct(name, quantity);
 
-  return true;
+  return newProduct;
 };
 
 module.exports = {

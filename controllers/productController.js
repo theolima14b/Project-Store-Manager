@@ -5,11 +5,7 @@ const addProduct = async (req, res) => {
 
   const product = await productService.addProduct(name, quantity);
 
-  if (!product) {
-    res.status(400).json({ message: 'Dados inválidos' });
-  }
-
-  res.status(200).send('OK');
+  return res.status(200).send(product);
 };
 
 module.exports = {
