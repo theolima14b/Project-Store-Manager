@@ -2,7 +2,7 @@ const validateQuantity = (req, res, next) => {
   const { quantity } = req.body;
   
   if (!quantity && quantity !== 0) {
-    return res.status(409).json({ message: '"quantity" is required' });
+    return res.status(400).json({ message: '"quantity" is required' });
   }
 
   if (typeof quantity !== 'number' || quantity <= 0) {

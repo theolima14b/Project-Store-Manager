@@ -11,6 +11,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
+// app.get('/products', rescue(productController.getAll));
 app.post('/products', validateName, validateQuantity, rescue(productController.addProduct));
 
 // não remova esse endpoint, e para o avaliador funcionar
