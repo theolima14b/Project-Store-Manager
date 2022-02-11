@@ -1,3 +1,5 @@
+const { getAll } = require('../models/productModel');
+
 const validateName = (req, res, next) => {
   const { name } = req.body;
 
@@ -14,4 +16,20 @@ const validateName = (req, res, next) => {
   next();
 };
 
-module.exports = validateName;
+const productAlreadyExists = async (req, res, next) => {
+  const { name } = req.body;
+  const allProducts = await getAll();
+
+  const checkProduct = allProducts.some((product) => (product.name === name)); // Idéia do Gustavo Sant'Anna, ja retorna um true ou false na checagem. //
+
+  if (checkProduct === true) {
+    return res.status(409).json({ message: 'Product already exists' });
+  }
+
+  next();
+};
+
+module.exports = {
+  validateName, 
+  productAlreadyExists,
+};
