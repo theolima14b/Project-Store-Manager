@@ -19,7 +19,21 @@ const addProduct = async (req, res) => {
   });
 };
 
+const getProductById = async (req, res) => {
+  const { productId } = req.params;
+  const allProducts = await productService.getAll();
+
+  const findProduct = allProducts.find((product) => product.id === Number(productId));
+
+  if (!findProduct) {
+    return res.status(404).json({ message: 'Product not found' });
+  }
+
+  return res.status(200).json(findProduct);
+};
+
 module.exports = {
-  addProduct,
   getAll,
+  addProduct,
+  getProductById,
 }; 

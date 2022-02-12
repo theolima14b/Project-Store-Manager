@@ -12,6 +12,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get('/products', rescue(productController.getAll));
+app.get('/products/:productId', rescue(productController.getProductById));
 app.post(
   '/products',
   validateName,
