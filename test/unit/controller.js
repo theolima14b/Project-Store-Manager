@@ -1,6 +1,5 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const { equal } = require('@hapi/joi/lib/base');
 
 const productController = require('../../controllers/product');
 const productService = require('../../services/product');
@@ -8,135 +7,293 @@ const productService = require('../../services/product');
 const salesController = require('../../controllers/sales');
 const salesService = require('../../services/sales');
 
-describe('Testa a camada productController', () => {
-  describe('Testa se /GET lista todos os produtos', () => {
-    const response = {};
-    const request = {};
+describe('Test the endpoint /GET/sales', () => {
+  const response = {};
+  const request = {};
 
-    before (() => {
-      response.status = sinon.stub().returns(response.status);
-      response.json = sinon.stub().returns;
-
-      sinon.stub(productService, 'getAll').resolves(true);
-    });
-
-    after(() => {
-      productService.getAll.restore();
-    });
-
-    it('Valida que todos os produtos estão sendo retornados', async () => {
-      await productController.getAll(request, response);
-
-      expect(response.status.calledWith(200)).to.be.equal(true)
-    });
-
-    before(() => {
-      request.params = [{ id: 1}]
-
-      response.status = sinon.stub().returns(response.status);
-      response.json = sinon.stub().returns;
-
-      sinon.stub(productService, 'getById').resolves(true)
-    });
-
-    after(() => {
-      productService.getById.restore();
-    });
-
-    it('Retorna um produto quando a requisição tem um ID válido', async () => {
-      await productController.getById(request, response);
-
-      expect(response.status.calledWith(200)).to.be.equal(true);
-    });
-
-    describe('Testa se o endpoint /PUT atualiza um produto', () => {
-      const response = {};
-      const request = {};
-  
-      before(() => {
-        request.params = [{ id: 2 }];
-        request.body = [{ name: 'churrasquinho', quantity: 10 }];
-  
-        response.status = sinon.stub().returns(response);
-        response.json = sinon.stub().returns();
-  
-        sinon.stub(productService, 'updateProduct').resolves(true);
-        sinon.stub(productService, 'getById').resolves(true);
-      });
-      after(() => {
-        productService.updateProduct.restore();
-        productService.getById.restore();
-      });
-  
-      it('Altera o produto quando a requisição é válida', async () => {
-        await productController.updateProduct(request, response);
-  
-        expect(response.status.calledWith(200)).to.be.equal(true);
-      });
-    });
+  before(() => {
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+    sinon.stub(salesService, 'getAll').resolves(true);
   });
-  
-  describe('Testa a camada productController', () => {
-    describe('Testa se o endpoint /POST cadastra um produto', () => {
-      const response = {};
-      const request = {};
-  
-      before(() => {
-        request.body = [{ product_id: 1, quantity: 10 }];
-  
-        response.status = sinon.stub().returns(response);
-        response.json = sinon.stub().returns();
-  
-        sinon.stub(salesService, 'addSale').resolves(true);
-      });
-      after(() => {
-        salesService.addSale.restore();
-      });
-  
-      it('Responde com código 201 para uma requisição válida', async () => {
-        await salesController.addSale(request, response);
-  
-        expect(response.status.calledWith(201)).to.be.equal(true);
-      });
-    });
-  
-    describe('Testa se /GET lista todas as sales', () => {
-      const response = {};
-      const request = {};
-  
-      before(() => {
-        response.status = sinon.stub().returns(response);
-        response.json = sinon.stub().returns();
-  
-        sinon.stub(salesService, 'getAll').resolves(true);
-      });
-      after(() => {
-        salesService.getAll.restore();
-      });
-  
-      it('Testa se todas as sales estão sendo retornardas', async () => {
-        await salesController.getAll(request, response);
-  
-        expect(response.status.calledWith(200)).to.be.equal(true);
-      });
-  
-      before(() => {
-        request.params = [{ id: 1 }];
-  
-        response.status = sinon.stub().returns(response);
-        response.json = sinon.stub().returns();
-  
-        sinon.stub(salesService, 'getById').resolves(true);
-      });
-      after(() => {
-        salesService.getById.restore();
-      });
-  
-      it('Retorna uma sale quando a requisição tem um ID válido', async () => {
-        await salesController.getById(request, response);
-  
-        expect(response.status.calledWith(200)).to.be.equal(true);
-      });
-    });
+
+  after(() => {
+    salesService.getAll.restore();
   });
+
+  it('Returns a reponse with code 200', async () => {
+    await salesController.getAll(request, response);
+
+    expect(response.status.calledWith(200)).to.be.equal(true);
+  });
+
+  it('Returns a JSON', async () => {
+    await salesController.getAll(request, response);
+
+    expect(response.json.called).to.be.equal(true);
+  });
+
+});
+
+describe('Test the endpoint /POST/sales', () => {
+  const response = {};
+  const request = {};
+
+  before(() => {
+    request.body = [{ product_id: 1, quantity: 10 }];
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+    sinon.stub(salesService, 'addSale').resolves(true);
+  });
+
+  after(() => {
+    salesService.addSale.restore();
+  });
+
+  it('Returns a reponse with code 201', async () => {
+    await salesController.addSale(request, response);
+
+    expect(response.status.calledWith(201)).to.be.equal(true);
+  });
+
+  it('Returns a JSON', async () => {
+    await salesController.addSale(request, response);
+
+    expect(response.json.called).to.be.equal(true);
+  });
+
+});
+
+describe('Test the endpoint /POST/sales/:id', () => {
+  const response = {};
+  const request = {};
+
+  before(() => {
+    request.params = { id: 3 };
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+    sinon.stub(salesService, 'getById').resolves(true);
+  });
+
+  after(() => {
+    salesService.getById.restore();
+  });
+
+  it('Returns a reponse with code 200', async () => {
+    await salesController.getById(request, response);
+    console.log(response.status);
+
+    expect(response.status.calledWith(200)).to.be.equal(true);
+  });
+
+  it('Returns a JSON', async () => {
+    await salesController.getById(request, response);
+
+    expect(response.json.called).to.be.equal(true);
+  });
+
+});
+
+describe('Test the endpoint /PUT/sales/:id', () => {
+  const response = {};
+  const request = {};
+
+  before(() => {
+    request.params = { id: 1 };
+    request.body = [{ product_id: 3, quantity: 20 }];
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+    sinon.stub(salesService, 'updateSale').resolves(true);
+  });
+
+  after(() => {
+    salesService.updateSale.restore();
+  });
+
+  it('Returns a reponse with code 200', async () => {
+    await salesController.updateSale(request, response);
+
+    expect(response.status.calledWith(200)).to.be.equal(true);
+  });
+
+  it('Returns a JSON', async () => {
+    await salesController.updateSale(request, response);
+
+    expect(response.json.called).to.be.equal(true);
+  });
+
+});
+
+describe('Test the endpoint /DELETE/sales/:id', () => {
+  const response = {};
+  const request = {};
+
+  before(() => {
+    request.params = { id: 3 };
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+    sinon.stub(salesService, 'deleteSale').resolves(true);
+  });
+
+  after(() => {
+    salesService.deleteSale.restore();
+  });
+
+  it('Returns a reponse with code 200', async () => {
+    await salesController.deleteSale(request, response);
+    console.log(response.status);
+
+    expect(response.status.calledWith(200)).to.be.equal(true);
+  });
+
+  it('Returns a JSON', async () => {
+    await salesController.deleteSale(request, response);
+
+    expect(response.json.called).to.be.equal(true);
+  });
+
+});
+
+describe('Test the endpoint /POST/product', () => {
+  const response = {};
+  const request = {};
+
+  before(() => {
+    request.body = { name: "Armadura do Homem de Ferro", quantity: "100" };
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+    sinon.stub(productService, 'addProduct').resolves(true);
+    sinon.stub(productController, 'getById').resolves(true);
+    sinon.stub(productService, 'getAll').resolves([{
+      id: 1,
+      name: "Armadura do Homem de Ferro",
+      quantity: "100"
+    }]);
+  });
+
+  after(() => {
+    productService.addProduct.restore();
+    productService.getAll.restore();
+    productController.getById.restore();
+  });
+
+    it('Returns a reponse with code 201', async () => {
+      await productController.addProduct(request, response);
+
+      expect(response.status.calledWith(201)).to.be.equal(true);
+    });
+
+    it('Returns a JSON', async () => {
+      await productController.addProduct(request, response);
+
+      expect(response.json.called).to.be.equal(true);
+    });
+
+});
+
+describe('Test the endpoint /GET/products', () => {
+  const response = {};
+  const request = {};
+  const addedProduct = { id: 1, name: "Martelo do Thor", quantity: 10 };
+
+  before(() => {
+    request.body = {};
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+    sinon.stub(productService, 'getAll').resolves(true);
+  });
+
+  after(() => {
+    productService.getAll.restore();
+  });
+
+  it('Returns a reponse with code 200', async () => {
+    await productController.getAll(request, response);
+    console.log(response.status);
+
+    expect(response.status.calledWith(200)).to.be.equal(true);
+  });
+
+  it('Returns a JSON', async () => {
+    await productController.getAll(request, response);
+
+    expect(response.json.called).to.be.equal(true);
+  });
+
+});
+
+describe('Test the endpoint /PUT/products/:id', () => {
+  const response = {};
+  const request = {};
+  const addedProduct = { id: 1, name: "Manopla do Infinito", quantity: 10 };
+
+  before(() => {
+    request.params = { id: 1 }
+    request.body = { name: "Cajado do Loki", quantity: "20" };
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+    sinon.stub(productService, 'updateProduct').resolves(true);
+    sinon.stub(productService, 'getById').resolves(true);
+  });
+
+  after(() => {
+    productService.updateProduct.restore();
+    productService.getById.restore();
+  });
+
+  it('Returns a reponse with code 200', async () => {
+    await productController.updateProduct(request, response);
+    console.log(response.status);
+
+    expect(response.status.calledWith(200)).to.be.equal(true);
+  });
+
+  it('Returns a JSON', async () => {
+    await productController.updateProduct(request, response);
+
+    expect(response.json.called).to.be.equal(true);
+  });
+
+});
+
+describe('Test the endpoint /DELETE/products/:id', () => {
+  const response = {};
+  const request = {};
+  const addedProduct = { id: 1, name: "Escudo do Capitão América", quantity: 10 };
+
+  before(() => {
+    request.params = { id: 1 }
+    request.body = { name: "Armadura do Pantera Negra", quantity: "20" };
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+    sinon.stub(productService, 'getById').resolves(true);      
+    sinon.stub(productService, 'deleteProduct').resolves(true);
+  });
+
+  after(() => {
+    productService.getById.restore();
+    productService.deleteProduct.restore();
+  });
+
+  it('Returns a reponse with code 200', async () => {
+    await productController.deleteProduct(request, response);
+    console.log(response.status);
+
+    expect(response.status.calledWith(200)).to.be.equal(true);
+  });
+
+  it('Returns a JSON', async () => {
+    await productController.deleteProduct(request, response);
+
+    expect(response.json.called).to.be.equal(true);
+  });
+
 });
