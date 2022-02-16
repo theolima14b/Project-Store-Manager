@@ -36,7 +36,10 @@ const updateSale = async (req, res) => {
 const deleteSale = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedSale = await salesService.deleteSale(id);
+
+    const deletedSale = await salesService.getById(id);
+
+    await salesService.deleteSale(id);
 
     return res.status(200).json(deletedSale);
   } catch (err) {

@@ -37,13 +37,7 @@ const updateSale = async (id, sale) => {
 };
 
 const deleteSale = async (id) => {
-    const deletedSale = await this.getById(id);
-
-    if (!deletedSale || deletedSale.length === 0) throw new Error();
-
-    await salesModel.deleteSale(id);
-
-    return deletedSale;
+  await salesModel.deleteSale(id);
 };
 
 module.exports = { 

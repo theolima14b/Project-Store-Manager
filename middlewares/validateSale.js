@@ -27,6 +27,6 @@ const validateSale = (req, res, next) => {
   next();
 };
 
-module.exports = { 
+module.exports = {
   validateSale,
- };
+};
