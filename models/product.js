@@ -9,7 +9,7 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  const [product] = connection.execute(
+  const [product] = await connection.execute(
     'SELECT * from StoreManager.products WHERE id = ?',
     [id],
   );
