@@ -5,7 +5,7 @@ const getAll = async () =>
   `SELECT sales.id AS saleId, sales.date, products.product_id, products.quantity
   FROM StoreManager.sales AS sales
   INNER JOIN StoreManager.sales_products AS products ON sale_id = sales.id`,
-  );
+);
 
 const getById = async (id) => 
   connection.execute(

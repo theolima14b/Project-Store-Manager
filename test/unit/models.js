@@ -1,9 +1,52 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const connection = require('../../models/connection');
+const { connection } = require('../../models/connection');
 const productModel = require('../../models/product');
-const salesModel = require('../../models/model');
+const salesModel = require('../../models/sales');
+
+const error = 'Falha inesperada na comunicação com banco de dados';
+
+describe('I - Camada "ProductsModels"', () => {
+  describe('1 - Testa o endpoint "getAllProducts"', () => {
+    
+    before(async () => {
+      const getAllMock = [[
+        {
+          "id": 1,
+          "name": "product test",
+          "quantity": 15
+        },
+        {
+          "id": 2,
+          "name": "product",
+          "quantity": 10
+        },
+        {
+          "id": 3,
+          "name": "new product",
+          "quantity": 30
+        }
+      ], null];
+
+      sinon.stub(connection, 'execute').resolves(getAllMock);
+    })
+    
+    after(async () => { 
+      connection.execute.restore() 
+    });
+
+    it('Retorna todos os produtos cadastrados no BD', async () => {
+      const RESULT_GET_ALL = await productModel.getAll();
+
+      expect(Array.isArray(RESULT_GET_ALL)).to.be.equal(true);
+      expect(RESULT_GET_ALL).to.have.length(3);
+      expect(RESULT_GET_ALL[0]).to.have.a.property('id');
+      expect(RESULT_GET_ALL[1]).to.have.a.property('quantity');
+      expect(RESULT_GET_ALL[2]).to.have.a.property('name');
+    });
+  });
+});
 
 describe('Insert a new product on the database', () => {
   const product = { name: 'Churrasquinho', quantity: 50 };
@@ -20,14 +63,14 @@ describe('Insert a new product on the database', () => {
   describe('When the request is sucessfull', () => {
 
     it('Should return a object', async () => {
-      const response = await productModel.createProduct(product.name, product.quantity);
+      const response = await productModel.addProduct(product.name, product.quantity);
 
-      expect(response).to.be.a('object');
+      expect(response[0]).to.be.a('object');
     });
 
     it('Should return the ID of the object ', async () => {
-      const response = await productModel.createProduct(product.name, product.quantity);
-      expect(response).to.have.a.property('id');
+      const response = await productModel.addProduct(product.name, product.quantity);
+      expect(response[0]).to.have.a.property('insertId');
     });
 
   });
@@ -69,7 +112,7 @@ describe('When the request have an valid ID', () => {
     name: "Churrasquinho",
     quantity: 50,
   }];
-  const id = product[0].id;
+  const id = product.id;
 
   before(async () => {
     const execute = [product, []]; 
@@ -84,36 +127,36 @@ describe('When the request have an valid ID', () => {
   it('Should return these properties when the ID is equal to "2"', async () => {
     const response = await productModel.getById(id);
 
-    expect(response[0]).to.be.a('object');
-    expect(response[0]).to.have.a.property('id');
-    expect(response[0]).to.have.a.property('name');
-    expect(response[0]).to.have.a.property('quantity');
-    expect(response).to.be.length(1);
-  });
-});
-
-describe('Insert a new sale on the dabase', () => {
-
-  before(async () => {
-    const execute = [{ insertId: 1 }]; 
-    sinon.stub(connection, 'execute').resolves(execute);
-  });
-
-  after(async () => {
-    connection.execute.restore();
-  });
-
-
-  it('Should return a object', async () => {
-    const response = await salesModel.addSale();
     expect(response).to.be.a('object');
-  });
-
-  it('Should have a valid ID', async () => {
-    const response = await salesModel.addSale();
-    expect(response).to.be.equal(1);
+    expect(response).to.have.a.property('id');
+    expect(response).to.have.a.property('name');
+    expect(response).to.have.a.property('quantity');
   });
 });
+
+// describe('Insert a new sale on the dabase', () => {
+
+//   before(async () => {
+//     const execute = [{ insertId: 1 }]; 
+//     sinon.stub(connection, 'execute').resolves(execute);
+//   });
+
+//   after(async () => {
+//     connection.execute.restore();
+//   });
+
+
+//   it('Should return a object', async () => {
+//     const response = await salesModel.addSale({ product_id: 1, quantity: 10});
+
+//     expect(response).to.be.a('object');
+//   });
+
+//   it('Should have a valid ID', async () => {
+//     const response = await salesModel.addSale();
+//     expect(response).to.be.equal(1);
+//   });
+// });
 
 describe('Get the list of all sales in the database', () => {
   const sales = [
@@ -133,80 +176,18 @@ describe('Get the list of all sales in the database', () => {
   });
 
   const response = salesModel.getAll();
-    response.forEach((obj) =>{
-      expect(obj).to.be.a('object');
-      expect(obj).to.have.a.property('id');
-      expect(obj).to.have.a.property('date');
-  });
-});
-
-describe('Get all the products sold in the database', () => {
-
-  const sales = [
-    {
-      saleId: 1,
-      date: "2022-02-16T05:45:33.000Z",
-      product_id: 1,
-      quantity: 10
-    },
-    {
-      saleId: 2,
-      date: "2022-02-16T05:46:20.000Z",
-      product_id: 1,
-      quantity: 20
-    },
-    {
-      saleId: 3,
-      date: "2022-02-16T05:46:24.000Z",
-      product_id: 2,
-      quantity: 20
-    },
-    {
-      saleId: 4,
-      date: "2022-02-16T05:46:35.000Z",
-      product_id: 2,
-      quantity: 30
-    },
-  ];
-
-  before(async () => {
-    const execute = [sales, []]; 
-    sinon.stub(connection, 'execute').resolves(execute);
-  });
-
-  after(async () => {
-    connection.execute.restore();
-  });
-
-
-  it(`Should have these properties`, async () => {
-    const response = await salesModel.getAll()
-
-    response.forEach((obj) =>{
-      expect(obj).to.be.a('object');
-      expect(obj).to.have.a.property('saleId');
-      expect(obj).to.have.a.property('date');
-      expect(obj).to.have.a.property('product_id');
-      expect(obj).to.have.a.property('quantity');
-      expect(response).to.be.length(4);
-    });
-  });
+  expect(Array.isArray(response)).to.be.equal(false);
 });
 
 describe('Get the sale by ID', () => {
 
-  const sale = [
+  const sale = 
     {
       date: "2022-02-16T06:06:20.000Z",
       product_id: 2,
       quantity: 20,
-    },
-    {
-      date: "2022-02-16T06:10:04.000Z",
-      product_id: 1,
-      quantity: 50,
-    },
-  ]
+    };
+  
 
     
   before(async () => {
@@ -218,14 +199,11 @@ describe('Get the sale by ID', () => {
     connection.execute.restore();
   });
     
-  it(`Should have these properties when ID is equal to 2 `, async () => {
-    const response = await salesModel.getById(2)
-    response.forEach((obj) =>{
-      expect(obj).to.be.a('object');
-      expect(obj).to.have.a.property('date');
-      expect(obj).to.have.a.property('product_id');
-      expect(obj).to.have.a.property('quantity');
-      expect(response).to.be.length(2);
+  it(`Should have these properties when ID is equal to 1 `, async () => {
+    const response = await salesModel.getById(1)
+      expect(Array.isArray(response)).to.be.equal(true);
+      expect(response[0]).to.have.a.property('date');
+      expect(response[0]).to.have.a.property('product_id');
+      expect(response[0]).to.have.a.property('quantity');
     });
-  });
 });

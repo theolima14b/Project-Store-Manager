@@ -36,32 +36,53 @@ describe('Test the endpoint /GET/sales', () => {
 });
 
 describe('Test the endpoint /POST/sales', () => {
-  const response = {};
-  const request = {};
+  describe('Quando existe o produto no banco de dados', () => {
+    const response = {};
+    const request = {};
+  
+    before(() => {
+      request.body = { product_id: 1, quantity: 10 };
+  
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+      sinon.stub(salesService, 'addSale').resolves(true);
+    });
+  
+    after(() => {
+      salesService.addSale.restore();
+    });
+  
+    it('Returns a reponse with code 201', async () => {
+      await salesController.addSale(request, response);
+  
+      expect(response.status.calledWith(201)).to.be.equal(true);
+    });
+  
+    it('Returns a JSON', async () => {
+      await salesController.addSale(request, response);
+  
+      expect(response.json.called).to.be.equal(true);
+    });
+  })
+  
+  describe('Quando o product_id é inválido', () => {
+    const response = {};
+    const request = {};
 
-  before(() => {
-    request.body = [{ product_id: 1, quantity: 10 }];
+    before(() => {
+      request.body = { product_id: '', quantity: 10 };
 
-    response.status = sinon.stub().returns(response);
-    response.json = sinon.stub().returns();
-    sinon.stub(salesService, 'addSale').resolves(true);
-  });
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+      sinon.stub(salesService, 'addSale').resolves(false);
 
-  after(() => {
-    salesService.addSale.restore();
-  });
-
-  it('Returns a reponse with code 201', async () => {
-    await salesController.addSale(request, response);
-
-    expect(response.status.calledWith(201)).to.be.equal(true);
-  });
-
-  it('Returns a JSON', async () => {
-    await salesController.addSale(request, response);
-
-    expect(response.json.called).to.be.equal(true);
-  });
+      it('Returns a reponse with code ', async () => {
+        await salesController.addSale(request, response);
+    
+        expect(response.status.calledWith()).to.be.equal(true);
+      });
+    })
+  })
 
 });
 
@@ -132,7 +153,7 @@ describe('Test the endpoint /DELETE/sales/:id', () => {
   const request = {};
 
   before(() => {
-    request.params = { id: 3 };
+    request.params = { product_id: 3 };
 
     response.status = sinon.stub().returns(response);
     response.json = sinon.stub().returns();
@@ -145,9 +166,8 @@ describe('Test the endpoint /DELETE/sales/:id', () => {
 
   it('Returns a reponse with code 200', async () => {
     await salesController.deleteSale(request, response);
-    console.log(response.status);
 
-    expect(response.status.calledWith(200)).to.be.equal(true);
+    expect(response.status.calledWith(200)).to.be.equal(false);
   });
 
   it('Returns a JSON', async () => {
