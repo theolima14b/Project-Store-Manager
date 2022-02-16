@@ -132,7 +132,7 @@ describe('Get the list of all sales in the database', () => {
     connection.execute.restore();
   });
 
-  const response = await salesModel.getAll();
+  const response = salesModel.getAll();
     response.forEach((obj) =>{
       expect(obj).to.be.a('object');
       expect(obj).to.have.a.property('id');

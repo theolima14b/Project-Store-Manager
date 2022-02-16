@@ -1,27 +1,25 @@
 const productModel = require('../models/product');
 
-const checkProduct = async (sale) => {
-  const allProducts = await productModel.getAll();
-  const findProduct = allProducts.find((product) => product.id === sale.product_id);
+const INVALID_QUANTITY = 'Such amount is not permitted to sell';
 
-  console.log(findProduct);
+const saleQuantyValidator = async (req, res, next) => {
+  const { body } = req;
 
-  return findProduct;
-};
+  const isValid = body.map(async (soldProduct) => {
+    const product = await productModel.getById(soldProduct.product_id);
+    if (product.quantity < soldProduct.quantity) return false;
+    return true;
+  });
 
-const quantityValidator = async (req, res, next) => {
-  const sales = req.body;
-  const isValid = sales.map(checkProduct);
-  await Promise.all(isValid).then((result) => {
-    if (!result.every((element) => element)) {
-        return res.status(422).json(
-            { message: 'Such amount is not permitted to sell' },
-        );
+  await Promise.all(isValid).then((validation) => {
+    if (!validation.every((element) => element)) {
+      return res.status(422).json({ message: INVALID_QUANTITY });
     }
+    
     next();
-});   
+  });
 };
 
-module.exports = {
-  quantityValidator,
+module.exports = { 
+  saleQuantyValidator,
 };

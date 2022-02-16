@@ -7,7 +7,7 @@ const salesRouter = express.Router();
 
 salesRouter.post('/', 
   saleMiddleware.validateSale, 
-  areEnoughQuantities.quantityValidator,
+  areEnoughQuantities.saleQuantyValidator,
   salesController.addSale);
 
 salesRouter.get('/', salesController.getAll);
