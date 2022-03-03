@@ -74,146 +74,146 @@ describe('Get a product with a valid ID', () => {
   });
 });
 
-// describe('Create a new sale', () => {
-//   const id = 1; 
-//   const array = [
-//     {
-//       product_id: 1,
-//       quantity: 2,
-//     },
-//     {
-//       product_id: 3,
-//       quantity: 4,
-//     },
-//   ];
+describe('Create a new sale', () => {
+  const id = 1; 
+  const array = [
+    {
+      product_id: 1,
+      quantity: 2,
+    },
+    {
+      product_id: 3,
+      quantity: 4,
+    },
+  ];
 
-//   const expectedReturn = {
-//     id: 1,
-//     itemsSold: [
-//       {
-//         product_id: 1,
-//         quantity: 2,
-//       },
-//       {
-//         product_id: 3,
-//         quantity: 4,
-//       },
-//     ],
-//   };
+  const expectedReturn = {
+    id: 1,
+    itemsSold: [
+      {
+        product_id: 1,
+        quantity: 2,
+      },
+      {
+        product_id: 3,
+        quantity: 4,
+      },
+    ],
+  };
 
-//   before(async () => {
-//     sinon.stub(salesModel, 'addSale').resolves(id);
-//     sinon.stub(salesModel, 'addSale').getCalls(2);
-//   });
+  before(async () => {
+    sinon.stub(salesModel, 'addSale').resolves(id);
+    sinon.stub(salesModel, 'addSale').getCalls(2);
+  });
 
-//   after(async () => {
-//     salesModel.addSale.restore();
-//   });
-
-
-//   it('Should return an object with these properties', async () => {
-//     const response = await salesService.addSale(array);
-//       expect(response).to.be.a('object');
-//       expect(response).to.have.a.property('id');
-//       expect(response).to.have.a.property('itemsSold');
-//       expect(response.itemsSold[0]).to.have.a.property('product_id');
-//       expect(response.itemsSold[0]).to.have.a.property('quantity');
-//       expect(response.itemsSold).to.be.length(2);
-//   });
-// });
-
-// describe('Test getAll from sales', () => {
-
-//   const sales = [
-//     {
-//       saleId: 1,
-//       date: "2022-02-16T07:05:50.000Z",
-//       product_id: 1,
-//       quantity: 10
-//     },
-//     {
-//       saleId: 2,
-//       date: "2022-02-16T07:06:20.000Z",
-//       product_id: 1,
-//       quantity: 10
-//     },
-//     {
-//       saleId: 3,
-//       date: "2022-02-16T07:08:24.000Z",
-//       product_id: 1,
-//       quantity: 10
-//     },
-//     {
-//       saleId: 4,
-//       date: "2022-02-16T07:08:35.000Z",
-//       product_id: 1,
-//       quantity: 10
-//     },
-//     {
-//       saleId: 5,
-//       date: "2022-02-16T07:08:44.000Z",
-//       product_id: 1,
-//       quantity: 10
-//     },
-//   ];
-
-//   before(async () => {
-//     sinon.stub(salesModel, 'getAll').resolves(sales);
-//   });
-
-//   after(async () => {
-//     salesModel.getAll.restore();
-//   });
+  after(async () => {
+    salesModel.addSale.restore();
+  });
 
 
-//   it('Returns a object with these properties', async () => {
-//    const response = await salesService.getAll();
-//     expect(response).to.be.equal('ok');
-//       expect(obj).to.be.a('object');
-//       expect(obj).to.have.a.property('saleId');
-//       expect(obj).to.have.a.property('date');
-//       expect(obj).to.have.a.property('product_id');
-//       expect(obj).to.have.a.property('quantity');
-//       expect(response).to.be.length(5);
-//     });
-// });
+  it('Should return an object with these properties', async () => {
+    const response = await salesService.addSale(array);
+      expect(response).to.be.a('object');
+      expect(response).to.have.a.property('id');
+      expect(response).to.have.a.property('itemsSold');
+      expect(response.itemsSold[0]).to.have.a.property('product_id');
+      expect(response.itemsSold[0]).to.have.a.property('quantity');
+      expect(response.itemsSold).to.be.length(2);
+  });
+});
 
-// describe('Test getById from sales', () => {
+describe('Test getAll from sales', () => {
 
-//   const sale = [
-//     {
-//     date: "2022-02-16T07:06:20.000Z",
-//     product_id: 1,
-//     quantity: 5,
-//     },
-//     {
-//     date: "2022-02-16T07:06:20.000Z",
-//     product_id: 2,
-//     quantity: 10,
-//     },
-//   ]
+  const sales = [
+    {
+      saleId: 1,
+      date: "2022-02-16T07:05:50.000Z",
+      product_id: 1,
+      quantity: 10
+    },
+    {
+      saleId: 2,
+      date: "2022-02-16T07:06:20.000Z",
+      product_id: 1,
+      quantity: 10
+    },
+    {
+      saleId: 3,
+      date: "2022-02-16T07:08:24.000Z",
+      product_id: 1,
+      quantity: 10
+    },
+    {
+      saleId: 4,
+      date: "2022-02-16T07:08:35.000Z",
+      product_id: 1,
+      quantity: 10
+    },
+    {
+      saleId: 5,
+      date: "2022-02-16T07:08:44.000Z",
+      product_id: 1,
+      quantity: 10
+    },
+  ];
 
-//   before(async () => {
-//     sinon.stub(salesModel, 'getById').resolves(sale);
-//   });
+  before(async () => {
+    sinon.stub(salesModel, 'getAll').resolves(sales);
+  });
 
-//   after(async () => {
-//     salesModel.getById.restore();
-//   });
+  after(async () => {
+    salesModel.getAll.restore();
+  });
 
 
-//   it('Returns a object with these properties', async () => {
-//    const response = await salesService.getById(2);
-//     response.forEach((obj) =>{
-//       expect(obj).to.be.a('object');
-//       expect(obj).to.have.a.property('date');
-//       expect(obj).to.have.a.property('product_id');
-//       expect(obj).to.have.a.property('quantity');
-//       expect(response).to.be.length(2);
+  it('Returns a object with these properties', async () => {
+   const response = await salesService.getAll();
+    expect(response).to.be.equal('ok');
+      expect(obj).to.be.a('object');
+      expect(obj).to.have.a.property('saleId');
+      expect(obj).to.have.a.property('date');
+      expect(obj).to.have.a.property('product_id');
+      expect(obj).to.have.a.property('quantity');
+      expect(response).to.be.length(5);
+    });
+});
+
+describe('Test getById from sales', () => {
+
+  const sale = [
+    {
+    date: "2022-02-16T07:06:20.000Z",
+    product_id: 1,
+    quantity: 5,
+    },
+    {
+    date: "2022-02-16T07:06:20.000Z",
+    product_id: 2,
+    quantity: 10,
+    },
+  ]
+
+  before(async () => {
+    sinon.stub(salesModel, 'getById').resolves(sale);
+  });
+
+  after(async () => {
+    salesModel.getById.restore();
+  });
+
+
+  it('Returns a object with these properties', async () => {
+   const response = await salesService.getById(2);
+    response.forEach((obj) =>{
+      expect(obj).to.be.a('object');
+      expect(obj).to.have.a.property('date');
+      expect(obj).to.have.a.property('product_id');
+      expect(obj).to.have.a.property('quantity');
+      expect(response).to.be.length(2);
      
-//     });
-//   });
-// });
+    });
+  });
+});
 
 describe('Test updateSale from sales', () => {
   const array = [
@@ -246,41 +246,41 @@ describe('Test updateSale from sales', () => {
    
 });
 
-// describe('Test deleteSale from sales', () => {
-//   const array = [
-//     { 
-//       date: "2021-09-09T04:54:29.000Z",
-//       product_id: 1,
-//       quantity: 2,
-//     },
-//     {
-//       date: "2021-09-09T04:54:54.000Z",
-//       product_id: 2,
-//       quantity: 2,
-//     },
-//   ];
+describe('Test deleteSale from sales', () => {
+  const array = [
+    { 
+      date: "2021-09-09T04:54:29.000Z",
+      product_id: 1,
+      quantity: 2,
+    },
+    {
+      date: "2021-09-09T04:54:54.000Z",
+      product_id: 2,
+      quantity: 2,
+    },
+  ];
 
-//   before(async () => {
-//     sinon.stub(salesModel, 'getById').resolves(array);
-//     sinon.stub(salesModel, 'deleteSale').getCall(1);
-//   });
+  before(async () => {
+    sinon.stub(salesModel, 'getById').resolves(array);
+    sinon.stub(salesModel, 'deleteSale').getCall(1);
+  });
 
-//   after(async () => {
-//     salesModel.getById.restore()
-//     salesModel.deleteSale.restore();
-//   });
+  after(async () => {
+    salesModel.getById.restore()
+    salesModel.deleteSale.restore();
+  });
 
 
-//   it('Returns a object with these properties', async () => {
-//    const response = await salesService.deleteSale(2);
-//       expect(response).to.be.a('array');
-//       expect(response).to.be.length(2); 
-//       response.forEach((obj) =>{
-//         expect(obj).to.be.a('object');
-//         expect(obj).to.have.a.property('date');
-//         expect(obj).to.have.a.property('product_id');
-//         expect(obj).to.have.a.property('quantity');       
-//       });
-//   });
+  it('Returns a object with these properties', async () => {
+   const response = await salesService.deleteSale(2);
+      expect(response).to.be.a('array');
+      expect(response).to.be.length(2); 
+      response.forEach((obj) =>{
+        expect(obj).to.be.a('object');
+        expect(obj).to.have.a.property('date');
+        expect(obj).to.have.a.property('product_id');
+        expect(obj).to.have.a.property('quantity');       
+      });
+  });
    
-// });
+});
